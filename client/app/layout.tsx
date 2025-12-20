@@ -1,5 +1,6 @@
+// app/layout.tsx
 import { AuthProvider } from "@/context/AuthContext";
-import NavBar from "@/app/components/NavBar";
+import ConditionalNavBar from "@/app/components/ConditionalNavbar"; // Updated import
 import "./globals.css";
 
 export const metadata = {
@@ -37,7 +38,7 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          <NavBar />
+          <ConditionalNavBar /> {/* Now conditional */}
           <main>{children}</main>
         </AuthProvider>
       </body>

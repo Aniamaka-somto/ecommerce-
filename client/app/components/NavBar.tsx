@@ -76,7 +76,7 @@ export default function NavBar() {
                   <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
-                  <span className="hidden md:block text-sm font-medium truncate max-w-[80px]">
+                  <span className="hidden md:block text-sm font-medium truncate max-w-20">
                     {user?.name?.split(" ")[0]}
                   </span>
                 </button>
