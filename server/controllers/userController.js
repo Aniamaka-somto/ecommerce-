@@ -122,6 +122,16 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+//get user profile
+const getUserProfile = asyncHandler(async (req, res) => {
+  // req.user is set by authenticate middleware
+  res.status(200).json({
+    _id: req.user._id,
+    username: req.user.username,
+    email: req.user.email,
+  });
+});
+
 module.exports = {
   createUser,
   loginUser,
@@ -130,4 +140,5 @@ module.exports = {
   getSingleUser,
   updateUser,
   deleteUser,
+  getUserProfile,
 };

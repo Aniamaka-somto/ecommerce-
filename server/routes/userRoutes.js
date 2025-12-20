@@ -8,6 +8,7 @@ const {
   getSingleUser,
   updateUser,
   deleteUser,
+  getUserProfile,
 } = require("../controllers/userController");
 const {
   authenticate,
@@ -20,7 +21,7 @@ router.post("/login", loginUser);
 
 // Any logged-in user can do these
 router.post("/logout", authenticate, logoutController);
-// router.get("/profile", authenticate, getUserProfile);
+router.get("/profile", authenticate, getUserProfile);
 // router.put("/profile", authenticate, updateProfile);
 
 //Admin

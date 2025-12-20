@@ -74,10 +74,10 @@ export default function NavBar() {
                   className="bg-white h-9 w-9 md:h-10 md:w-auto md:min-w-24 rounded-full dark:bg-zinc-950 flex items-center justify-center md:px-3 gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
                 >
                   <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">
-                    {user?.name?.charAt(0).toUpperCase()}
+                    {user?.username?.charAt(0).toUpperCase()}
                   </div>
                   <span className="hidden md:block text-sm font-medium truncate max-w-20">
-                    {user?.name?.split(" ")[0]}
+                    {user?.username?.split(" ")[0]}
                   </span>
                 </button>
 

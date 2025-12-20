@@ -11,9 +11,9 @@ import {
 import { useRouter } from "next/navigation";
 
 interface User {
-  id: string;
+  _id: string;
   email: string;
-  name: string;
+  username: string;
 }
 
 interface AuthContextType {
@@ -32,7 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Check if user is logged in on mount
+  const API_URL = "http://localhost:5000";
+
   useEffect(() => {
     checkAuth();
   }, []);
@@ -45,11 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Verify token with your API
-      const res = await fetch("http://localhost:3001/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await fetch(`${API_URL}/api/user/userprofile`, {
+        // ← Changed here
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.ok) {
@@ -66,53 +65,64 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const fetchUser = async (token: string) => {
+    const res = await fetch(`${API_URL}/api/user/userprofile`, {
+      // ← Changed here
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const userData = await res.json();
+      setUser(userData);
+    }
+  };
+
   const signup = async (email: string, password: string, username: string) => {
-    const res = await fetch("http://localhost:5000/api/user/register", {
+    const res = await fetch(`${API_URL}/api/user/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({ email, password, username }),
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Signup failed");
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || "Signup failed");
     }
 
     const data = await res.json();
     localStorage.setItem("token", data.token);
-    setUser(data.user);
+    await fetchUser(data.token); // ← Uses the updated endpoint
     router.push("/");
   };
 
   const login = async (email: string, password: string) => {
-    const res = await fetch("http://localhost:5000/api/user/login", {
+    const res = await fetch(`${API_URL}/api/user/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Login failed");
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || "Login failed");
     }
 
     const data = await res.json();
     localStorage.setItem("token", data.token);
-    setUser(data.user);
+    await fetchUser(data.token); // ← Uses the updated endpoint
     router.push("/");
   };
 
   const logout = async () => {
     try {
       const token = localStorage.getItem("token");
-      await fetch("http://localhost:3001/api/auth/logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
+      if (token) {
+        await fetch(`${API_URL}/api/user/logout`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+    } catch (err) {
+      console.error(err);
     } finally {
       localStorage.removeItem("token");
       setUser(null);
@@ -138,8 +148,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 }
