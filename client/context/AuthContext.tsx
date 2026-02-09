@@ -14,6 +14,7 @@ interface User {
   _id: string;
   email: string;
   username: string;
+  role: string;
 }
 
 interface AuthContextType {
@@ -40,45 +41,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      const res = await fetch(`${API_URL}/api/user/userprofile`, {
-        // ← Changed here
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch(`${API_URL}/api/user/profile`, {
+        credentials: "include", // ✅ Send cookies
       });
 
       if (res.ok) {
         const userData = await res.json();
         setUser(userData);
-      } else {
-        localStorage.removeItem("token");
       }
     } catch (error) {
       console.error("Auth check failed:", error);
-      localStorage.removeItem("token");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchUser = async (token: string) => {
-    const res = await fetch(`${API_URL}/api/user/userprofile`, {
-      // ← Changed here
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res.ok) {
-      const userData = await res.json();
-      setUser(userData);
     }
   };
 
   const signup = async (email: string, password: string, username: string) => {
     const res = await fetch(`${API_URL}/api/user/register`, {
       method: "POST",
+      credentials: "include", // ✅ Allow cookies to be set
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, username }),
     });
@@ -89,14 +70,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const data = await res.json();
-    localStorage.setItem("token", data.token);
-    await fetchUser(data.token); // ← Uses the updated endpoint
-    router.push("/");
+    setUser(data); // Cookie is set automatically by backend
+    router.push("/shop");
   };
 
   const login = async (email: string, password: string) => {
     const res = await fetch(`${API_URL}/api/user/login`, {
       method: "POST",
+      credentials: "include", // ✅ Allow cookies to be set
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
@@ -107,26 +88,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const data = await res.json();
-    localStorage.setItem("token", data.token);
-    await fetchUser(data.token); // ← Uses the updated endpoint
-    router.push("/");
+    setUser(data); // Cookie is set automatically by backend
+    router.push("/shop");
   };
 
   const logout = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        await fetch(`${API_URL}/api/user/logout`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-      }
+      await fetch(`${API_URL}/api/user/logout`, {
+        method: "POST",
+        credentials: "include", // ✅ Send cookies
+      });
     } catch (err) {
       console.error(err);
     } finally {
-      localStorage.removeItem("token");
       setUser(null);
-      router.push("/login");
+      router.push("/");
     }
   };
 

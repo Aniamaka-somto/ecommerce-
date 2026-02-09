@@ -2,6 +2,7 @@
 import { AuthProvider } from "@/context/AuthContext";
 import ConditionalNavBar from "@/app/components/ConditionalNavbar"; // Updated import
 import "./globals.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export const metadata = {
   title: "MyShop - Ecommerce Store",

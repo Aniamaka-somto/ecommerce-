@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
 export default function NavBar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, loading } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
@@ -126,7 +126,7 @@ export default function NavBar() {
               </div>
             ) : (
               <Link
-                href="/login"
+                href="/auth/login"
                 className="bg-white h-9 w-9 md:h-10 md:w-auto md:min-w-24 rounded-full dark:bg-zinc-950 flex items-center justify-center md:px-4 gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition"
               >
                 <FaUser className="text-sm md:text-base" />

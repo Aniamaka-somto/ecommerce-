@@ -28,7 +28,7 @@ router.get("/profile", authenticate, getUserProfile);
 router.get("/users", authenticate, authenticateAdmin, getAllUsers);
 router.get("/users/:id", authenticate, authenticateAdmin, getSingleUser);
 router.delete("/users/:id", authenticate, authenticateAdmin, deleteUser);
-router.put("/users/:id/role", authenticate, authenticateAdmin, updateUser);
+router.put("/:id/role", authenticate, authenticateAdmin, updateUser);
 
 module.exports = router;
 //
