@@ -7,6 +7,7 @@ import { IoHeartOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function NavBar() {
   const { user, isAuthenticated, logout, loading } = useAuth();
@@ -15,7 +16,7 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="flex justify-center items-center px-4 md:px-14">
+      <div className="flex justify-center items-center px-4 md:px-14 ">
         <div className="h-14 md:h-16 w-full shadow-sm flex mt-5 rounded-full bg-zinc-200 justify-between items-center dark:bg-zinc-800 px-2 md:px-4 py-5">
           {/* Logo and Search */}
           <div className="flex gap-2 md:gap-3 items-center flex-1">
@@ -67,7 +68,10 @@ export default function NavBar() {
             </Link>
 
             {/* User Avatar/Auth Button */}
-            {isAuthenticated ? (
+
+            {loading ? (
+              <Skeleton className="h-9 w-9 md:h-10 md:w-24 rounded-full" />
+            ) : isAuthenticated ? (
               <div className="relative">
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}

@@ -1,8 +1,8 @@
 // app/layout.tsx
 import { AuthProvider } from "@/context/AuthContext";
-import ConditionalNavBar from "@/app/components/ConditionalNavbar"; // Updated import
+import ConditionalNavBar from "@/components/ConditionalNavbar"; // Updated import
 import "./globals.css";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const metadata = {
   title: "MyShop - Ecommerce Store",

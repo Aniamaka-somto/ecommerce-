@@ -1,4 +1,4 @@
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function Checkout() {
   return (

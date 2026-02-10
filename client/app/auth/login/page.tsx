@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
